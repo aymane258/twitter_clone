@@ -1,26 +1,28 @@
-import type { GetServerSideProps, NextPage } from 'next'
+import type { GetServerSideProps } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
-import dynamic from 'next/dynamic'
-import Sidebar from '../components/Sidebar'
+import { Toaster } from 'react-hot-toast'
 import Feed from '../components/Feed'
+import Sidebar from '../components/Sidebar'
 import Widgets from '../components/Widgets'
-import { fetchTweets } from '../utils/fetchTweets'
 import { Tweet } from '../typings'
+import { fetchTweets } from '../utils/fetchTweets'
 
 interface Props {
   tweets: Tweet[]
 }
 
-const Home: NextPage<Props> = ({tweets}:Props) => {
-  console.log(tweets)
+const Home = ({ tweets }: Props) => {
   return (
-    <div className="mx-auto max-h-screen overflow-hidden lg:max-w-6xl">
-      <main className="grid  grid-cols-9">
+    <div className="lg:max-w-6xl mx-auto max-h-screen overflow-hidden">
+      <Head>
+        <title>Twitter 2.0 by Pacio</title>
+        <link rel="icon" href="/twitter_logo.png" />
+      </Head>
+      <Toaster />
+
+      <main className='grid grid-cols-9'>
         <Sidebar />
-
-        <Feed tweets={tweets}/>
-
+        <Feed tweets={tweets} />
         <Widgets />
       </main>
     </div>
@@ -29,13 +31,12 @@ const Home: NextPage<Props> = ({tweets}:Props) => {
 
 export default Home
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const tweets = await fetchTweets()
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const tweets = await fetchTweets();
 
   return {
-    props: {
+    props:{
       tweets
     }
   }
-
 }
